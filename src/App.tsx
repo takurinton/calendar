@@ -1,12 +1,15 @@
-import { createTheme, ThemeProvider, Typography } from "ingred-ui";
+import dayjs, { Dayjs } from "dayjs";
+import { createTheme, ThemeProvider } from "ingred-ui";
+import { useState } from "react";
+import { DatePicker } from "./DatePicker";
 
 function App() {
   const theme = createTheme();
+  const [date, setDate] = useState<Dayjs>(dayjs());
+
   return (
     <ThemeProvider theme={theme}>
-      <Typography component="h1" size="xxxxxl" align="center">
-        takurinton
-      </Typography>
+      <DatePicker date={date} onChange={setDate} />
     </ThemeProvider>
   );
 }
