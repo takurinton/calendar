@@ -1,12 +1,12 @@
-import dayjs, { Dayjs } from "dayjs";
-import React, { FC, useCallback } from "react";
+import { Dayjs } from "dayjs";
+import { FC, ReactNode } from "react";
 import { DayContainer } from "./styled";
 
 type Props = {
   selected: boolean;
   value: Dayjs;
   onClickDate?: (newDate: Dayjs) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export const Day: FC<Props> = ({ selected, value, onClickDate, children }) => (
