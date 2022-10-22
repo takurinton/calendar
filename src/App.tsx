@@ -9,7 +9,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DatePicker date={date} onChange={setDate} />
+      <DatePicker date={date} onDateChange={setDate} />
     </ThemeProvider>
   );
 }

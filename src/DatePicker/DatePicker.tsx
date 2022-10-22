@@ -7,7 +7,7 @@ import { Typography } from "ingred-ui";
 
 type Props = {
   date?: Dayjs;
-  onChange?: (date: Dayjs) => void;
+  onDateChange?: (date: Dayjs) => void;
 };
 
 /**
@@ -15,25 +15,21 @@ type Props = {
  * @todo select date
  * @todo update date
  */
-export const DatePicker: FC<Props> = ({ date = dayjs(), onChange }) => {
+export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
   const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
-  const dayOfWeek = date.day();
+  const dayOfWeek = (date.startOf("month").day() + 7) % 7;
 
-  // TODO: props
-  const [selectedDate, setSelectedDate] = useState<Dayjs>(date);
-
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const date = dayjs(event.target.value);
-      onChange?.(date);
+  const handleDateChange = useCallback(
+    (newDay: Dayjs) => {
+      onDateChange?.(newDay);
     },
-    [onChange]
+    [onDateChange]
   );
 
   return (
     <Container>
       <Typography align="center" component="h1" weight="bold">
-        {date.month() + 1}月
+        {date.format("MM月")}
       </Typography>
       <DatePickerContainer>
         {weekList["ja"].map((week) => (
@@ -48,11 +44,8 @@ export const DatePicker: FC<Props> = ({ date = dayjs(), onChange }) => {
             <Day
               key={day}
               value={day}
-              onClickDate={(newDay) => {
-                setSelectedDate(newDay);
-                onChange?.(newDay);
-              }}
-              selected={selectedDate.date() === day}
+              onClickDate={handleDateChange}
+              selected={date.date() === day}
             >
               {day}
             </Day>

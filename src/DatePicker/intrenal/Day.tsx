@@ -12,6 +12,7 @@ type Props = {
 export const Day: FC<Props> = ({ selected, value, onClickDate, children }) => {
   const handleChange = useCallback(
     (newDay: number) => {
+      console.log(dayjs().date(newDay));
       onClickDate?.(dayjs().date(newDay));
     },
     [value]
