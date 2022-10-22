@@ -7,9 +7,14 @@ function App() {
   const theme = createTheme();
   const [date, setDate] = useState<Dayjs>(dayjs());
 
+  const handleChangeDate = (newDate: Dayjs) => {
+    console.log(`selected: ${newDate.format("YYYY-MM-DD")}`);
+    setDate(newDate);
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <DatePicker date={date} onDateChange={setDate} />
+      <DatePicker date={date} onDateChange={handleChangeDate} />
     </ThemeProvider>
   );
 }

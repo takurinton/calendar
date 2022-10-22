@@ -16,6 +16,7 @@ type Props = {
  * @todo update date
  */
 export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
+  const vdate = date.clone();
   const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
   const dayOfWeek = (date.startOf("month").day() + 7) % 7;
 
@@ -43,7 +44,7 @@ export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
           <DayStyle key={day}>
             <Day
               key={day}
-              value={day}
+              value={dayjs(new Date(vdate.year(), vdate.month(), day))}
               onClickDate={handleDateChange}
               selected={date.date() === day}
             >
