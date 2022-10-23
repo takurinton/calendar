@@ -3,8 +3,7 @@ import { Flex } from "ingred-ui";
 
 export const Container = styled(Flex)`
   padding: ${({ theme }) => theme.spacing}px;
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
-  border-radius: ${({ theme }) => theme.radius}px;
+  border: none;
   width: fit-content;
 `;
 

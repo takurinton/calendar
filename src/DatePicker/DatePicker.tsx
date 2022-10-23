@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { weekList } from "./constants";
 import { Container, DatePickerContainer, DayStyle } from "./styled";
 import { Day } from "./intrenal";
-import { Typography } from "ingred-ui";
+import { ScrollArea, Typography } from "ingred-ui";
 
 type Props = {
   date?: Dayjs;
@@ -55,9 +55,4 @@ export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
       </DatePickerContainer>
     </Container>
   );
-};
-
-// TODO: define Calender component with scrollable 12months
-export const Calender = () => {
-  return <>calender</>;
 };
