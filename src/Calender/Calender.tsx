@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 import { ScrollArea } from "ingred-ui";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { DatePicker } from "../DatePicker";
 import { Container } from "./styled";
 
@@ -35,13 +35,22 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
 
   const vdate = date.clone();
 
+  // TODO: SSR support
+  useEffect(() => {
+    const target = document.getElementById(vdate.format("YYYY-MM"));
+    if (target !== null) {
+      target.scrollIntoView({ block: "center" });
+    }
+  }, []);
+
   return (
     <Container>
-      <ScrollArea minHeight={HEIGHT} maxHeight={HEIGHT}>
+      <ScrollArea minHeight={HEIGHT} maxHeight={HEIGHT} id="calender">
         <>
           {monthList.map((m) => (
             <DatePicker
-              key={m.format("YYYY-MM-DD")}
+              key={m.format("YYYY-MM")}
+              id={m.format("YYYY-MM")}
               date={m}
               vdate={vdate}
               onDateChange={onDateChange}

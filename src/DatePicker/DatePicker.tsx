@@ -6,6 +6,7 @@ import { Day } from "./intrenal";
 import { Typography } from "ingred-ui";
 
 type Props = {
+  id: string;
   date?: Dayjs;
   vdate: Dayjs;
   onDateChange?: (date: Dayjs) => void;
@@ -18,6 +19,7 @@ type Props = {
  * Sunday is the start.
  */
 export const DatePicker: FC<Props> = ({
+  id,
   date = dayjs(),
   vdate,
   onDateChange,
@@ -26,7 +28,7 @@ export const DatePicker: FC<Props> = ({
   const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
 
   return (
-    <Container>
+    <Container id={id}>
       <Typography align="center" component="h1" weight="bold">
         {date.format("YYYY年MM月")}
       </Typography>
