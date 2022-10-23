@@ -41,15 +41,15 @@ export const DatePicker: FC<Props> = ({
           <DayStyle key={day}>
             <Day
               key={day}
-              value={dayjs(new Date(vdate.year(), vdate.month(), day))}
-              onClickDate={onDateChange}
+              value={dayjs(new Date(date.year(), date.month(), day))}
               selected={
-                // string equal
+                // string compare
                 date.format("YYYY-MM-DD") ===
                 dayjs(new Date(vdate.year(), vdate.month(), day)).format(
                   "YYYY-MM-DD"
                 )
               }
+              onClickDate={onDateChange}
             >
               {day}
             </Day>
