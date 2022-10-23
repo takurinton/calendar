@@ -44,8 +44,8 @@ export const DatePicker: FC<Props> = ({
               value={dayjs(new Date(date.year(), date.month(), day))}
               selected={
                 // string compare
-                date.format("YYYY-MM-DD") ===
-                dayjs(new Date(vdate.year(), vdate.month(), day)).format(
+                vdate.format("YYYY-MM-DD") ===
+                dayjs(new Date(date.year(), date.month(), day)).format(
                   "YYYY-MM-DD"
                 )
               }
