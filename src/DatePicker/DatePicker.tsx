@@ -1,12 +1,13 @@
-import { FC, useCallback, useState } from "react";
+import { FC } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { weekList } from "./constants";
 import { Container, DatePickerContainer, DayStyle } from "./styled";
 import { Day } from "./intrenal";
-import { ScrollArea, Typography } from "ingred-ui";
+import { Typography } from "ingred-ui";
 
 type Props = {
   date?: Dayjs;
+  vdate: Dayjs;
   onDateChange?: (date: Dayjs) => void;
 };
 
@@ -15,22 +16,18 @@ type Props = {
  * @todo select date
  * @todo update date
  */
-export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
-  const vdate = date.clone();
-  const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
+export const DatePicker: FC<Props> = ({
+  date = dayjs(),
+  vdate,
+  onDateChange,
+}) => {
   const dayOfWeek = (date.startOf("month").day() + 7) % 7;
-
-  const handleDateChange = useCallback(
-    (newDay: Dayjs) => {
-      onDateChange?.(newDay);
-    },
-    [onDateChange]
-  );
+  const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
 
   return (
     <Container>
       <Typography align="center" component="h1" weight="bold">
-        {date.format("MM月")}
+        {date.format("YYYY年MM月")}
       </Typography>
       <DatePickerContainer>
         {weekList["ja"].map((week) => (
@@ -45,8 +42,14 @@ export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
             <Day
               key={day}
               value={dayjs(new Date(vdate.year(), vdate.month(), day))}
-              onClickDate={handleDateChange}
-              selected={date.date() === day}
+              onClickDate={onDateChange}
+              selected={
+                // string equal
+                date.format("YYYY-MM-DD") ===
+                dayjs(new Date(vdate.year(), vdate.month(), day)).format(
+                  "YYYY-MM-DD"
+                )
+              }
             >
               {day}
             </Day>
