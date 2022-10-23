@@ -2,7 +2,7 @@ import { FC } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { weekList } from "./constants";
 import { Container, DatePickerContainer, DayStyle } from "./styled";
-import { Day } from "./intrenal";
+import { Day } from "./internal";
 import { Typography } from "ingred-ui";
 
 type Props = {

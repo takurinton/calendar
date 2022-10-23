@@ -16,8 +16,7 @@ const HEIGHT = "400px";
  * Scrollable calendar UI.
  * Currently, one year from the currently selected date is displayed.
  * @todo Can scroll to infinite.
- * @todo Can selected before date.
- * @todo Can display selected date by default.
+ * @todo Can render current month when server-side rendering.
  */
 export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
   // stupid hack...
