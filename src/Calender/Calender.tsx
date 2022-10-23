@@ -27,6 +27,11 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
   const nextYearMonthList = Array.from(new Array(12)).map((_, i) =>
     d.clone().add(i, "month")
   );
+  const prevYearMonthList = Array.from(new Array(12)).map((_, i) =>
+    d.clone().subtract(12 - i, "month")
+  );
+
+  const monthList = [...prevYearMonthList, ...nextYearMonthList];
 
   const vdate = date.clone();
 
@@ -34,7 +39,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
     <Container>
       <ScrollArea minHeight={HEIGHT} maxHeight={HEIGHT}>
         <>
-          {nextYearMonthList.map((m) => (
+          {monthList.map((m) => (
             <DatePicker
               key={m.format("YYYY-MM-DD")}
               date={m}
