@@ -2,14 +2,13 @@ import dayjs, { Dayjs } from "dayjs";
 import { ScrollArea } from "ingred-ui";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { DatePicker } from "../DatePicker";
+import { HEIGHT, MARGIN } from "./constants";
 import { Container } from "./styled";
 
 type Props = {
   date?: Dayjs;
   onDateChange?: (date: Dayjs) => void;
 };
-
-const HEIGHT = "400px";
 
 /**
  * Calender UI
@@ -54,7 +53,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
 
     const next = loaded.next.add(1, "year");
 
-    if (scrollTop + clientHeight + 100 >= scrollHeight) {
+    if (scrollTop + clientHeight + MARGIN >= scrollHeight) {
       const nextYearMonthList = Array.from(new Array(12)).map((_, i) =>
         loaded.next.clone().add(i, "month")
       );
@@ -71,7 +70,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
     const { scrollTop } = ref.current;
 
     const prev = loaded.prev.subtract(1, "year");
-    if (scrollTop - 100 <= 0) {
+    if (scrollTop - MARGIN <= 0) {
       const prevYearMonthList = Array.from(new Array(12)).map((_, i) =>
         loaded.prev.clone().subtract(12 - i, "month")
       );
