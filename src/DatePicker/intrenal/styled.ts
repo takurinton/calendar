@@ -8,4 +8,9 @@ export const DayContainer = styled.button<{ selected: boolean }>`
   height: ${({ theme }) => theme.spacing * 4}px;
   width: ${({ theme }) => theme.spacing * 4}px;
   cursor: pointer;
+  &:hover {
+    background-color: ${({ selected, theme }) =>
+      selected ? theme.palette.primary.main : theme.palette.primary.highlight};
+    transition: 0.3s;
+  }
 `;

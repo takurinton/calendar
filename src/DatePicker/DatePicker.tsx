@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { weekList } from "./constants";
 import { Container, DatePickerContainer, DayStyle } from "./styled";
@@ -6,31 +6,31 @@ import { Day } from "./intrenal";
 import { Typography } from "ingred-ui";
 
 type Props = {
+  id: string;
   date?: Dayjs;
+  vdate: Dayjs;
   onDateChange?: (date: Dayjs) => void;
 };
 
 /**
- * @todo view calendar ui
- * @todo select date
- * @todo update date
+ * DatePicker UI
+ * Component for displaying a stand-alone calendar.
+ * Calculates the first day of the month and displays the calendar in grid.
+ * Sunday is the start.
  */
-export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
-  const vdate = date.clone();
-  const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
+export const DatePicker: FC<Props> = ({
+  id,
+  date = dayjs(),
+  vdate,
+  onDateChange,
+}) => {
   const dayOfWeek = (date.startOf("month").day() + 7) % 7;
-
-  const handleDateChange = useCallback(
-    (newDay: Dayjs) => {
-      onDateChange?.(newDay);
-    },
-    [onDateChange]
-  );
+  const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
 
   return (
-    <Container>
+    <Container id={id}>
       <Typography align="center" component="h1" weight="bold">
-        {date.format("MM月")}
+        {date.format("YYYY年MM月")}
       </Typography>
       <DatePickerContainer>
         {weekList["ja"].map((week) => (
@@ -44,9 +44,15 @@ export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
           <DayStyle key={day}>
             <Day
               key={day}
-              value={dayjs(new Date(vdate.year(), vdate.month(), day))}
-              onClickDate={handleDateChange}
-              selected={date.date() === day}
+              value={dayjs(new Date(date.year(), date.month(), day))}
+              selected={
+                // string compare
+                vdate.format("YYYY-MM-DD") ===
+                dayjs(new Date(date.year(), date.month(), day)).format(
+                  "YYYY-MM-DD"
+                )
+              }
+              onClickDate={onDateChange}
             >
               {day}
             </Day>
@@ -55,9 +61,4 @@ export const DatePicker: FC<Props> = ({ date = dayjs(), onDateChange }) => {
       </DatePickerContainer>
     </Container>
   );
-};
-
-// TODO: define Calender component with scrollable 12months
-export const Calender = () => {
-  return <>calender</>;
 };
