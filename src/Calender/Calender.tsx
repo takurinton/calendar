@@ -11,8 +11,17 @@ type Props = {
 
 const HEIGHT = "400px";
 
+/**
+ * Calender UI
+ * Scrollable calendar UI.
+ * Currently, one year from the currently selected date is displayed.
+ * @todo Can scroll to infinite.
+ * @todo Can selected before date.
+ * @todo Can display selected date by default.
+ */
 export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
   // stupid hack...
+  // This is not the original purpose of memoization, but to fix values.
   const d = useMemo(() => date.clone(), []);
 
   const nextYearMonthList = Array.from(new Array(12)).map((_, i) =>

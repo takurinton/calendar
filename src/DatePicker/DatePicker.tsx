@@ -12,9 +12,10 @@ type Props = {
 };
 
 /**
- * @todo view calendar ui
- * @todo select date
- * @todo update date
+ * DatePicker UI
+ * Component for displaying a stand-alone calendar.
+ * Calculates the first day of the month and displays the calendar in grid.
+ * Sunday is the start.
  */
 export const DatePicker: FC<Props> = ({
   date = dayjs(),
