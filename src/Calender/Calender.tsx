@@ -80,7 +80,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
 
       // debug([...prevYearMonthList, ...nextYearMonthList], "load prev");
 
-      const next = loaded.prev.subtract(1, "year");
+      const next = loaded.next.subtract(1, "year");
       const prev = loaded.prev.subtract(1, "year");
 
       setLoaded({ next, prev });
@@ -106,7 +106,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
         ref.current.removeEventListener("scroll", handleScrollUp);
       }
     };
-  }, [loaded.next]);
+  }, [loaded.prev]);
 
   useEffect(() => {
     if (ref.current !== null) {
@@ -118,7 +118,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
         ref.current.removeEventListener("scroll", handleScrollDown);
       }
     };
-  }, [loaded.prev]);
+  }, [loaded.next]);
 
   return (
     <Container>
