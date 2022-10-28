@@ -11,19 +11,18 @@ type Props = {
   onDateChange?: (date: Dayjs) => void;
 };
 
-const debug = (list: Dayjs[], ...message: string[]) => {
-  console.log(...message);
-  list.map((d) => {
-    console.log(d.format("YYYY-MM"));
-  });
-  console.log("");
-};
+// const debug = (list: Dayjs[], ...message: string[]) => {
+//   console.log(...message);
+//   list.map((d) => {
+//     console.log(d.format("YYYY-MM"));
+//   });
+//   console.log("");
+// };
 
 /**
  * Calender UI
  * Scrollable calendar UI.
  * Currently, one year from the currently selected date is displayed.
- * @todo Can scroll to infinite.
  * @todo Can render current month when server-side rendering.
  */
 export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
