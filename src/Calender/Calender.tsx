@@ -4,17 +4,25 @@ import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { DatePicker } from "../DatePicker";
 import { HEIGHT, MARGIN } from "./constants";
 import { Container } from "./styled";
+import { getNextYearMonthList, getPrevYearMonthList } from "./utils";
 
 type Props = {
   date?: Dayjs;
   onDateChange?: (date: Dayjs) => void;
 };
 
+// const debug = (list: Dayjs[], ...message: string[]) => {
+//   console.log(...message);
+//   list.map((d) => {
+//     console.log(d.format("YYYY-MM"));
+//   });
+//   console.log("");
+// };
+
 /**
  * Calender UI
  * Scrollable calendar UI.
  * Currently, one year from the currently selected date is displayed.
- * @todo Can scroll to infinite.
  * @todo Can render current month when server-side rendering.
  */
 export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
@@ -22,24 +30,17 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
   // This is not the original purpose of memoization, but to fix values.
   const d = useMemo(() => date.clone(), []);
 
-  const nextYearMonthList = Array.from(new Array(12)).map((_, i) =>
-    d.clone().add(i, "month")
-  );
-  const prevYearMonthList = Array.from(new Array(12)).map((_, i) =>
-    d.clone().subtract(12 - i, "month")
-  );
-
   const ref = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState<{
     prev: Dayjs;
     next: Dayjs;
   }>({
-    prev: d.clone().subtract(12, "month"),
+    prev: d.subtract(12, "month"),
     next: d.add(1, "year"),
   });
   const [monthList, setMonthList] = useState<Dayjs[]>([
-    ...prevYearMonthList,
-    ...nextYearMonthList,
+    ...getPrevYearMonthList(d),
+    ...getNextYearMonthList(d),
   ]);
 
   const vdate = date.clone();
@@ -51,14 +52,17 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
 
     const { scrollTop, clientHeight, scrollHeight } = ref.current;
 
-    const next = loaded.next.add(1, "year");
-
     if (scrollTop + clientHeight + MARGIN >= scrollHeight) {
-      const nextYearMonthList = Array.from(new Array(12)).map((_, i) =>
-        loaded.next.clone().add(i, "month")
-      );
-      setLoaded({ next, prev: loaded.prev });
-      setMonthList([...monthList, ...nextYearMonthList]);
+      const prevYearMonthList = getPrevYearMonthList(loaded.next);
+      const nextYearMonthList = getNextYearMonthList(loaded.next);
+
+      // debug([...prevYearMonthList, ...nextYearMonthList], "load next");
+
+      const next = loaded.next.add(1, "year");
+      const prev = loaded.prev.add(1, "year");
+
+      setLoaded({ next, prev });
+      setMonthList([...prevYearMonthList, ...nextYearMonthList]);
     }
   };
 
@@ -69,13 +73,17 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
 
     const { scrollTop } = ref.current;
 
-    const prev = loaded.prev.subtract(1, "year");
     if (scrollTop - MARGIN <= 0) {
-      const prevYearMonthList = Array.from(new Array(12)).map((_, i) =>
-        loaded.prev.clone().subtract(12 - i, "month")
-      );
-      setLoaded({ next: loaded.next, prev });
-      setMonthList([...prevYearMonthList, ...monthList]);
+      const prevYearMonthList = getPrevYearMonthList(loaded.prev);
+      const nextYearMonthList = getNextYearMonthList(loaded.prev);
+
+      // debug([...prevYearMonthList, ...nextYearMonthList], "load prev");
+
+      const next = loaded.next.subtract(1, "year");
+      const prev = loaded.prev.subtract(1, "year");
+
+      setLoaded({ next, prev });
+      setMonthList([...prevYearMonthList, ...nextYearMonthList]);
     }
   };
 
@@ -90,16 +98,26 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
   useEffect(() => {
     if (ref.current !== null) {
       ref.current.addEventListener("scroll", handleScrollUp);
-      ref.current.addEventListener("scroll", handleScrollDown);
     }
 
     return () => {
       if (ref.current !== null) {
         ref.current.removeEventListener("scroll", handleScrollUp);
+      }
+    };
+  }, [loaded.prev]);
+
+  useEffect(() => {
+    if (ref.current !== null) {
+      ref.current.addEventListener("scroll", handleScrollDown);
+    }
+
+    return () => {
+      if (ref.current !== null) {
         ref.current.removeEventListener("scroll", handleScrollDown);
       }
     };
-  }, [loaded]);
+  }, [loaded.next]);
 
   return (
     <Container>
