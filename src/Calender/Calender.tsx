@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 import { ScrollArea } from "ingred-ui";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DatePicker } from "../DatePicker";
 import { HEIGHT, MARGIN } from "./constants";
 import { Container } from "./styled";
@@ -45,7 +45,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
 
   const vdate = date.clone();
 
-  const handleScrollDown = () => {
+  const handleScrollDown = useCallback(() => {
     if (ref.current === null) {
       return;
     }
@@ -64,9 +64,9 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
       setLoaded({ next, prev });
       setMonthList([...prevYearMonthList, ...nextYearMonthList]);
     }
-  };
+  }, [loaded]);
 
-  const handleScrollUp = () => {
+  const handleScrollUp = useCallback(() => {
     if (ref.current === null) {
       return;
     }
@@ -85,7 +85,7 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
       setLoaded({ next, prev });
       setMonthList([...prevYearMonthList, ...nextYearMonthList]);
     }
-  };
+  }, [loaded]);
 
   // TODO: SSR support
   useEffect(() => {
