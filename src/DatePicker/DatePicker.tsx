@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { weekList } from "./constants";
 import { Container, DatePickerContainer, DayStyle } from "./styled";
@@ -24,8 +24,11 @@ export const DatePicker: FC<Props> = ({
   vdate,
   onDateChange,
 }) => {
-  const dayOfWeek = (date.startOf("month").day() + 7) % 7;
-  const daysList = Array.from(new Array(date.daysInMonth()), (_, i) => i + 1);
+  const dayOfWeek = useMemo(() => date.startOf("month").day(), [date]);
+  const daysList = useMemo(
+    () => Array.from(new Array(date.daysInMonth()), (_, i) => i + 1),
+    [date]
+  );
 
   return (
     <Container id={id}>
