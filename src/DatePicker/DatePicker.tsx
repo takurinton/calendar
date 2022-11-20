@@ -41,6 +41,7 @@ export const DatePicker: FC<Props> = ({ date, onDateChange }) => {
             <DatePickerContainer
               key={m.format("YYYY-MM")}
               id={m.format("YYYY-MM")}
+              className={m.format("YYYY-MM")}
             >
               <Typography align="center" component="h1" weight="bold">
                 {m.format("YYYY年MM月")}

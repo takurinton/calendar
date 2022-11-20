@@ -31,9 +31,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <Typography component="h1">DatePicker</Typography>
+      <Typography component="h1">DatePicker</Typography>
       <DatePicker date={date} onDateChange={handleChangeDate} />
-      <Spacer pb={2} /> */}
+      <Spacer pb={2} />
       <Typography component="h1">DateRangePicker</Typography>
       <DateRangePicker date={dateRange} onDateChange={handleChangeDateRange} />
     </ThemeProvider>
