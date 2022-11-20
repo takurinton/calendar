@@ -39,8 +39,6 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
       const prevYearMonthList = getPrevYearMonthList(loaded.next);
       const nextYearMonthList = getNextYearMonthList(loaded.next);
 
-      // debug([...prevYearMonthList, ...nextYearMonthList], "load next");
-
       const next = loaded.next.add(1, "year");
       const prev = loaded.prev.add(1, "year");
 
@@ -60,8 +58,6 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
       const prevYearMonthList = getPrevYearMonthList(loaded.prev);
       const nextYearMonthList = getNextYearMonthList(loaded.prev);
 
-      // debug([...prevYearMonthList, ...nextYearMonthList], "load prev");
-
       const next = loaded.next.subtract(1, "year");
       const prev = loaded.prev.subtract(1, "year");
 
@@ -70,10 +66,7 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
     }
   }, [loaded]);
 
-  // TODO: SSR support
   useEffect(() => {
-    // Rendering multiple calendars break with duplicate ids...
-    // TODO: fix this
     const targets = document.getElementsByClassName(d.format("YYYY-MM"));
     for (const target of targets) {
       target.scrollIntoView({ block: "center" });
