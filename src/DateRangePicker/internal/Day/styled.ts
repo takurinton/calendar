@@ -12,10 +12,13 @@ export const DayContainer = styled.button<{
     }
     return "transparent";
   }};
+  color: ${({ selected, theme }) =>
+    selected ? theme.palette.white : theme.palette.black};
   border: none;
-  border-radius: 50%;
-  height: ${({ theme }) => theme.spacing * 4}px;
-  width: ${({ theme }) => theme.spacing * 4}px;
+  border-radius: ${({ theme, isBetween }) =>
+    isBetween ? theme.radius : "50%"};
+  height: ${({ theme }) => theme.spacing * 5}px;
+  width: ${({ theme }) => theme.spacing * 5}px;
   cursor: pointer;
   &:hover {
     background-color: ${({ selected, theme }) =>

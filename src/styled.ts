@@ -17,11 +17,10 @@ export const DatePickerContainer = styled(Flex)`
 export const CalendarContainer = styled(Flex)`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-gap: ${({ theme }) => theme.spacing}px;
+  grid-auto-rows: ${({ theme }) => theme.spacing * 6}px;
 `;
 
 export const DayStyle = styled.span`
-  padding: ${({ theme }) => theme.spacing / 2}px
-    ${({ theme }) => theme.spacing}px;
+  padding: ${({ theme }) => theme.spacing / 2}px 0;
   text-align: center;
 `;
