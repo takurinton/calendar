@@ -13,7 +13,7 @@ function App() {
   }>({ startDate: dayjs(), endDate: dayjs().add(1, "week") });
 
   const handleChangeDate = (newDate: Dayjs) => {
-    console.log(`selected: ${newDate.format("YYYY-MM-DD")}`);
+    console.log(`selected(DatePicker): ${newDate.format("YYYY-MM-DD")}`);
     setDate(newDate);
   };
 
@@ -22,7 +22,7 @@ function App() {
     endDate: Dayjs | null;
   }) => {
     console.log(
-      `selected: ${newDateRange.startDate?.format(
+      `selected(DateRangePicker): ${newDateRange.startDate?.format(
         "YYYY-MM-DD"
       )} - ${newDateRange.endDate?.format("YYYY-MM-DD")}`
     );
