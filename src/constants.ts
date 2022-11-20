@@ -1,3 +1,8 @@
+// for `<ScrollArea />`
+export const HEIGHT = "400px";
+// for scroll
+export const MARGIN = 500;
+
 export const weekList = {
   en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   ja: ["日", "月", "火", "水", "木", "金", "土"],

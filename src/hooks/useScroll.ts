@@ -1,36 +1,21 @@
-import dayjs, { Dayjs } from "dayjs";
-import { ScrollArea } from "ingred-ui";
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DatePicker } from "../DatePicker";
-import { HEIGHT, MARGIN } from "./constants";
-import { Container } from "./styled";
-import { getNextYearMonthList, getPrevYearMonthList } from "./utils";
-
-type Props = {
-  date?: Dayjs;
-  onDateChange?: (date: Dayjs) => void;
-};
-
-// const debug = (list: Dayjs[], ...message: string[]) => {
-//   console.log(...message);
-//   list.map((d) => {
-//     console.log(d.format("YYYY-MM"));
-//   });
-//   console.log("");
-// };
+import { Dayjs } from "dayjs";
+import { useCallback, useEffect, useState } from "react";
+import { MARGIN } from "../constants";
 
 /**
- * Calender UI
- * Scrollable calendar UI.
- * Currently, one year from the currently selected date is displayed.
- * @todo Can render current month when server-side rendering.
+ * This function internally creates a clone of the Dayjs object.
+ * This means that the user of this function will not be aware
+ * of the object's referent.
  */
-export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
-  // stupid hack...
-  // This is not the original purpose of memoization, but to fix values.
-  const d = useMemo(() => date.clone(), []);
+const getNextYearMonthList = (date: Dayjs) =>
+  Array.from(new Array(12)).map((_, i) => date.clone().add(i, "month"));
 
-  const ref = useRef<HTMLDivElement>(null);
+const getPrevYearMonthList = (date: Dayjs) =>
+  Array.from(new Array(12)).map((_, i) =>
+    date.clone().subtract(12 - i, "month")
+  );
+
+export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
   const [loaded, setLoaded] = useState<{
     prev: Dayjs;
     next: Dayjs;
@@ -43,8 +28,6 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
     ...getNextYearMonthList(d),
   ]);
 
-  const vdate = date.clone();
-
   const handleScrollDown = useCallback(() => {
     if (ref.current === null) {
       return;
@@ -55,8 +38,6 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
     if (scrollTop + clientHeight + MARGIN >= scrollHeight) {
       const prevYearMonthList = getPrevYearMonthList(loaded.next);
       const nextYearMonthList = getNextYearMonthList(loaded.next);
-
-      // debug([...prevYearMonthList, ...nextYearMonthList], "load next");
 
       const next = loaded.next.add(1, "year");
       const prev = loaded.prev.add(1, "year");
@@ -77,8 +58,6 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
       const prevYearMonthList = getPrevYearMonthList(loaded.prev);
       const nextYearMonthList = getNextYearMonthList(loaded.prev);
 
-      // debug([...prevYearMonthList, ...nextYearMonthList], "load prev");
-
       const next = loaded.next.subtract(1, "year");
       const prev = loaded.prev.subtract(1, "year");
 
@@ -87,10 +66,9 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
     }
   }, [loaded]);
 
-  // TODO: SSR support
   useEffect(() => {
-    const target = document.getElementById(vdate.format("YYYY-MM"));
-    if (target !== null) {
+    const targets = document.getElementsByClassName(d.format("YYYY-MM"));
+    for (const target of targets) {
       target.scrollIntoView({ block: "center" });
     }
   }, []);
@@ -119,21 +97,5 @@ export const Calender: FC<Props> = ({ date = dayjs(), onDateChange }) => {
     };
   }, [loaded.next]);
 
-  return (
-    <Container>
-      <ScrollArea ref={ref} minHeight={HEIGHT} maxHeight={HEIGHT} id="calender">
-        <>
-          {monthList.map((m) => (
-            <DatePicker
-              key={m.format("YYYY-MM")}
-              id={m.format("YYYY-MM")}
-              date={m}
-              vdate={vdate}
-              onDateChange={onDateChange}
-            />
-          ))}
-        </>
-      </ScrollArea>
-    </Container>
-  );
+  return { monthList };
 };

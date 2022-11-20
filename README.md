@@ -8,12 +8,11 @@ It is mainly designed to use in [ingred-ui](https://github.com/voyagegroup/ingre
 - [x] Display calendar
 - [ ] Select
   - [x] Select date
-  - [ ] Select date range
+  - [x] Select date range
   - [ ] Select month
   - [ ] Select year
-- [ ] Scroll
+- [x] Scroll
   - [x] Scrollable calendar
-  - [ ] Performance benchmark
 
 ## Usage
 
@@ -22,8 +21,8 @@ import dayjs, { Dayjs } from "dayjs";
 import { createTheme, ThemeProvider } from "ingred-ui";
 import { useState } from "react";
 // I want to do this in the future.
-// import { Calendar } from "ingred-ui/Calendar";
-import { Calender } from "./Calender";
+// import { Calendar } from "ingred-ui/DatePicker";
+import { DatePicker } from "./DatePicker";
 
 function App() {
   const theme = createTheme();
@@ -36,7 +35,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Calender date={date} onDateChange={handleChangeDate} />
+      <DatePicker date={date} onDateChange={handleChangeDate} />
     </ThemeProvider>
   );
 }
