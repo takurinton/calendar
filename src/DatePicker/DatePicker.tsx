@@ -24,14 +24,8 @@ type Props = {
  */
 export const DatePicker: FC<Props> = ({ date, onDateChange }) => {
   const vdate = useMemo(() => date.clone(), [date]);
-  const dayOfWeek = useMemo(() => vdate.startOf("month").day(), [vdate]);
-  const daysList = useMemo(
-    () => Array.from(new Array(vdate.daysInMonth()), (_, i) => i + 1),
-    [vdate]
-  );
-
   const ref = useRef<HTMLDivElement>(null);
-  const { monthList } = useScroll(vdate, ref);
+  const { monthList } = useScroll(date, ref);
 
   return (
     <Container>
@@ -51,27 +45,29 @@ export const DatePicker: FC<Props> = ({ date, onDateChange }) => {
                   <DayStyle key={week}>{week}</DayStyle>
                 ))}
 
-                {Array.from(new Array(dayOfWeek), (_, i) => (
+                {Array.from(new Array(m.startOf("month").day()), (_, i) => (
                   <DayStyle key={i} />
                 ))}
-                {daysList.map((day) => (
-                  <DayStyle key={day}>
-                    <Day
-                      key={day}
-                      value={dayjs(new Date(m.year(), m.month(), day))}
-                      selected={
-                        // string compare
-                        vdate.format("YYYY-MM-DD") ===
-                        dayjs(new Date(m.year(), m.month(), day)).format(
-                          "YYYY-MM-DD"
-                        )
-                      }
-                      onClickDate={onDateChange}
-                    >
-                      {day}
-                    </Day>
-                  </DayStyle>
-                ))}
+                {Array.from(new Array(m.daysInMonth()), (_, i) => i + 1).map(
+                  (day) => (
+                    <DayStyle key={day}>
+                      <Day
+                        key={day}
+                        value={dayjs(new Date(m.year(), m.month(), day))}
+                        selected={
+                          // string compare
+                          vdate.format("YYYY-MM-DD") ===
+                          dayjs(new Date(m.year(), m.month(), day)).format(
+                            "YYYY-MM-DD"
+                          )
+                        }
+                        onClickDate={onDateChange}
+                      >
+                        {day}
+                      </Day>
+                    </DayStyle>
+                  )
+                )}
               </CalendarContainer>
             </DatePickerContainer>
           ))}

@@ -82,15 +82,6 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
     }),
     []
   );
-  const dayOfWeek = useMemo(
-    () => vdate.startDate?.startOf("month").day(),
-    [vdate]
-  );
-  const daysList = useMemo(
-    () =>
-      Array.from(new Array(vdate.startDate?.daysInMonth()), (_, i) => i + 1),
-    [vdate]
-  );
 
   const ref = useRef<HTMLDivElement>(null);
   const { monthList } = useScroll(vdate.startDate ?? dayjs(), ref);
@@ -114,25 +105,27 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
                   <DayStyle key={week}>{week}</DayStyle>
                 ))}
 
-                {Array.from(new Array(dayOfWeek), (_, i) => (
+                {Array.from(new Array(m.startOf("month").day()), (_, i) => (
                   <DayStyle key={i} />
                 ))}
-                {daysList.map((day) => (
-                  <DayStyle key={day}>
-                    <Day
-                      key={day}
-                      value={dayjs(new Date(m.year(), m.month(), day))}
-                      date={date}
-                      selected={isSelected(date, m, day)}
-                      isBetween={isBetween(date, m, day)}
-                      clickState={clickState}
-                      changeState={setClickState}
-                      onClickDate={onDateChange}
-                    >
-                      {day}
-                    </Day>
-                  </DayStyle>
-                ))}
+                {Array.from(new Array(m.daysInMonth()), (_, i) => i + 1).map(
+                  (day) => (
+                    <DayStyle key={day}>
+                      <Day
+                        key={day}
+                        value={dayjs(new Date(m.year(), m.month(), day))}
+                        date={date}
+                        selected={isSelected(date, m, day)}
+                        isBetween={isBetween(date, m, day)}
+                        clickState={clickState}
+                        changeState={setClickState}
+                        onClickDate={onDateChange}
+                      >
+                        {day}
+                      </Day>
+                    </DayStyle>
+                  )
+                )}
               </CalendarContainer>
             </DatePickerContainer>
           ))}
