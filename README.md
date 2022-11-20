@@ -6,44 +6,74 @@ It is mainly designed to use in [ingred-ui](https://github.com/voyagegroup/ingre
 ## Features
 
 - [x] Display calendar
-- [ ] Select
+- [x] Select
   - [x] Select date
   - [x] Select date range
-  - [ ] Select month
-  - [ ] Select year
 - [x] Scroll
   - [x] Scrollable calendar
 
 ## Usage
 
+### DatePicker
+
 ```tsx
 import dayjs, { Dayjs } from "dayjs";
 import { createTheme, ThemeProvider } from "ingred-ui";
 import { useState } from "react";
-// I want to do this in the future.
-// import { Calendar } from "ingred-ui/DatePicker";
 import { DatePicker } from "./DatePicker";
 
 function App() {
   const theme = createTheme();
   const [date, setDate] = useState<Dayjs>(dayjs());
 
-  const handleChangeDate = (newDate: Dayjs) => {
-    console.log(`selected: ${newDate.format("YYYY-MM-DD")}`);
-    setDate(newDate);
-  };
-
   return (
     <ThemeProvider theme={theme}>
-      <DatePicker date={date} onDateChange={handleChangeDate} />
+      <DatePicker date={date} onDateChange={setDate} />
     </ThemeProvider>
   );
 }
 ```
 
-## Note
+### DateRangePicker
 
-I wrote an explanatory note on this.
+```tsx
+import dayjs, { Dayjs } from "dayjs";
+import { createTheme, ThemeProvider } from "ingred-ui";
+import { useState } from "react";
+import { DateRangePicker } from "./DateRangePicker";
 
-- [calendar ui](https://dev.takurinton.com/tech/frontend/calender-ui-prototype.html)
-- [calender ui with infinity scroll](https://dev.takurinton.com/tech/frontend/calender-ui-prototype-with-scroll.html)
+function App() {
+  const theme = createTheme();
+  const [date, setDate] = useState<{
+    startDate: Dayjs | null;
+    endDate: Dayjs | null;
+  }>({ startDate: dayjs(), endDate: dayjs().add(1, "week") });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <DateRangePicker date={date} onDateRangeChange={setDateRange} />
+    </ThemeProvider>
+  );
+}
+```
+
+## cloc
+
+```bash
+% cloc . --vcs=git
+      27 text files.
+      24 unique files.
+       3 files ignored.
+
+github.com/AlDanial/cloc v 1.94  T=0.62 s (38.5 files/s, 1142.6 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+TypeScript                      19             52             44            495
+JSON                             3              0              0             56
+Markdown                         1             11              0             38
+HTML                             1              0              0             17
+-------------------------------------------------------------------------------
+SUM:                            24             63             44            606
+-------------------------------------------------------------------------------
+```

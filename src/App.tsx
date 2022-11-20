@@ -6,36 +6,32 @@ import { DateRangePicker } from "./DateRangePicker";
 
 function App() {
   const theme = createTheme();
+
   const [date, setDate] = useState<Dayjs>(dayjs());
   const [dateRange, setDateRange] = useState<{
     startDate: Dayjs | null;
     endDate: Dayjs | null;
-  }>({ startDate: dayjs(), endDate: dayjs().add(1, "week") });
-
-  const handleChangeDate = (newDate: Dayjs) => {
-    console.log(`selected(DatePicker): ${newDate.format("YYYY-MM-DD")}`);
-    setDate(newDate);
-  };
-
-  const handleChangeDateRange = (newDateRange: {
-    startDate: Dayjs | null;
-    endDate: Dayjs | null;
-  }) => {
-    console.log(
-      `selected(DateRangePicker): ${newDateRange.startDate?.format(
-        "YYYY-MM-DD"
-      )} - ${newDateRange.endDate?.format("YYYY-MM-DD")}`
-    );
-    setDateRange(newDateRange);
-  };
+  }>({ startDate: dayjs(), endDate: dayjs().add(6, "day") });
 
   return (
     <ThemeProvider theme={theme}>
-      <Typography component="h1">DatePicker</Typography>
-      <DatePicker date={date} onDateChange={handleChangeDate} />
+      <Typography component="h1" weight="bold">
+        DatePicker
+      </Typography>
+      <Typography component="p">
+        {`selected: ${date.format("YYYY-MM-DD")}`}
+      </Typography>
+      <DatePicker date={date} onDateChange={setDate} />
       <Spacer pb={2} />
-      <Typography component="h1">DateRangePicker</Typography>
-      <DateRangePicker date={dateRange} onDateChange={handleChangeDateRange} />
+      <Typography component="h1" weight="bold">
+        DateRangePicker
+      </Typography>
+      <Typography component="p">
+        {`selected: ${dateRange.startDate?.format(
+          "YYYY-MM-DD"
+        )} -  ${dateRange.endDate?.format("YYYY-MM-DD")}`}
+      </Typography>
+      <DateRangePicker date={dateRange} onDateChange={setDateRange} />
     </ThemeProvider>
   );
 }
