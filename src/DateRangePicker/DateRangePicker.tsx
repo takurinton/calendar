@@ -1,7 +1,9 @@
 import dayjs, { Dayjs } from "dayjs";
-// import "dayjs/plugin/isBetween";
 import { ScrollArea, Typography } from "ingred-ui";
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
+import { Day } from "./internal/Day";
+import { ClickState, DateRange } from "./types";
+import { isSelected, isBetween } from "./utils";
 import { HEIGHT, weekList } from "../constants";
 import {
   CalendarContainer,
@@ -10,63 +12,11 @@ import {
   DayStyle,
 } from "../styled";
 import { useScroll } from "../hooks/useScroll";
-import { Day } from "./internal/Day";
-
-export type DateRange = {
-  startDate: Dayjs | null;
-  endDate: Dayjs | null;
-};
 
 type Props = {
   date: DateRange;
   onDateChange?: (date: DateRange) => void;
 };
-
-type ClickState = "start" | "end" | "none";
-
-const isSelected = (
-  { startDate, endDate }: DateRange,
-  month: Dayjs,
-  day: number
-) =>
-  startDate?.format("YYYY-MM-DD") ===
-    dayjs(new Date(month.year(), month.month(), day)).format("YYYY-MM-DD") ||
-  endDate?.format("YYYY-MM-DD") ===
-    dayjs(new Date(month.year(), month.month(), day)).format("YYYY-MM-DD");
-
-// isBetween is not working using vite development server. I don't know why.
-// Instead, I define function myself to check if the date is between start and end date.
-// const isBetween = (
-//   { startDate, endDate }: DateRange,
-//   month: Dayjs,
-//   day: number
-// ) =>
-//   (startDate &&
-//     endDate &&
-//     dayjs(new Date(month.year(), month.month(), day)).isBetween(
-//       startDate.format("YYYY-MM-DD"),
-//       endDate.format("YYYY-MM-DD"),
-//       "day",
-//       "[]"
-//     )) ??
-//   false;
-
-const isBetween = (
-  { startDate, endDate }: DateRange,
-  month: Dayjs,
-  day: number
-) =>
-  (startDate &&
-    endDate &&
-    dayjs(new Date(month.year(), month.month(), day)).isAfter(
-      startDate.format("YYYY-MM-DD"),
-      "day"
-    ) &&
-    dayjs(new Date(month.year(), month.month(), day)).isBefore(
-      endDate.format("YYYY-MM-DD"),
-      "day"
-    )) ??
-  false;
 
 /**
  * DateRangePicker
@@ -87,6 +37,35 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
   const { monthList } = useScroll(vdate.startDate ?? dayjs(), ref);
   const [clickState, setClickState] = useState<ClickState>("start");
 
+  // How can I improve the User Experience?
+  // Answer: impossible
+  const handleDateChange = useCallback(
+    (value: Dayjs) => {
+      if (clickState === "start") {
+        if (value.isAfter(date.endDate)) {
+          onDateChange?.({
+            startDate: date.endDate,
+            endDate: value,
+          });
+        } else {
+          onDateChange?.({
+            startDate: value,
+            endDate: date.endDate,
+          });
+        }
+        setClickState("end");
+      } else if (clickState === "end") {
+        if (value.isBefore(date.startDate)) {
+          onDateChange?.({ startDate: value, endDate: date.startDate });
+        } else {
+          onDateChange?.({ startDate: date.startDate, endDate: value });
+        }
+        setClickState("start");
+      }
+    },
+    [date]
+  );
+
   return (
     <Container>
       <ScrollArea ref={ref} minHeight={HEIGHT} maxHeight={HEIGHT} id="calendar">
@@ -104,7 +83,6 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
                 {weekList["ja"].map((week) => (
                   <DayStyle key={week}>{week}</DayStyle>
                 ))}
-
                 {Array.from(new Array(m.startOf("month").day()), (_, i) => (
                   <DayStyle key={i} />
                 ))}
@@ -114,12 +92,9 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
                       <Day
                         key={day}
                         value={dayjs(new Date(m.year(), m.month(), day))}
-                        date={date}
                         selected={isSelected(date, m, day)}
                         isBetween={isBetween(date, m, day)}
-                        clickState={clickState}
-                        changeState={setClickState}
-                        onClickDate={onDateChange}
+                        onClickDate={handleDateChange}
                       >
                         {day}
                       </Day>

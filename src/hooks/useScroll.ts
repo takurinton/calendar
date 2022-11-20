@@ -1,7 +1,19 @@
 import { Dayjs } from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { MARGIN } from "../constants";
-import { getNextYearMonthList, getPrevYearMonthList } from "../utils";
+
+/**
+ * This function internally creates a clone of the Dayjs object.
+ * This means that the user of this function will not be aware
+ * of the object's referent.
+ */
+const getNextYearMonthList = (date: Dayjs) =>
+  Array.from(new Array(12)).map((_, i) => date.clone().add(i, "month"));
+
+const getPrevYearMonthList = (date: Dayjs) =>
+  Array.from(new Array(12)).map((_, i) =>
+    date.clone().subtract(12 - i, "month")
+  );
 
 export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
   const [loaded, setLoaded] = useState<{

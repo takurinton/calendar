@@ -1,6 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { ScrollArea, Typography } from "ingred-ui";
 import { FC, useMemo, useRef } from "react";
+import { Day } from "./internal/Day";
 import { HEIGHT, weekList } from "../constants";
 import {
   Container,
@@ -9,7 +10,6 @@ import {
   DayStyle,
 } from "../styled";
 import { useScroll } from "../hooks/useScroll";
-import { Day } from "./internal/Day";
 
 type Props = {
   date: Dayjs;
@@ -44,7 +44,6 @@ export const DatePicker: FC<Props> = ({ date, onDateChange }) => {
                 {weekList["ja"].map((week) => (
                   <DayStyle key={week}>{week}</DayStyle>
                 ))}
-
                 {Array.from(new Array(m.startOf("month").day()), (_, i) => (
                   <DayStyle key={i} />
                 ))}
