@@ -8,12 +8,11 @@ It is mainly designed to use in [ingred-ui](https://github.com/voyagegroup/ingre
 - [x] Display calendar
 - [ ] Select
   - [x] Select date
-  - [ ] Select date range
+  - [x] Select date range
   - [ ] Select month
   - [ ] Select year
-- [ ] Scroll
+- [x] Scroll
   - [x] Scrollable calendar
-  - [ ] Performance benchmark
 
 ## Usage
 
