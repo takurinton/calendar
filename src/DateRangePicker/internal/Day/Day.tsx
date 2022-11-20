@@ -1,0 +1,56 @@
+import { Dayjs } from "dayjs";
+import { FC, memo, ReactNode } from "react";
+import { DayContainer } from "./styled";
+
+type DateRange = {
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+};
+
+type Props = {
+  selected: boolean;
+  value: Dayjs;
+  date: DateRange;
+  clickState: "start" | "end" | "none";
+  changeState: (newState: "start" | "end" | "none") => void;
+  onClickDate?: (newDate: DateRange) => void;
+  children: ReactNode;
+};
+
+export const Day: FC<Props> = memo(
+  ({
+    selected,
+    date,
+    value,
+    clickState,
+    changeState,
+    onClickDate,
+    children,
+  }) => {
+    return (
+      <DayContainer
+        selected={selected}
+        // How can I improve the User Experience?
+        // Answer: impossible
+        onClick={() => {
+          if (clickState === "start") {
+            onClickDate?.({
+              startDate: value,
+              endDate: date.endDate,
+            });
+            changeState("end");
+          } else if (clickState === "end") {
+            if (value.isBefore(date.startDate)) {
+              onClickDate?.({ startDate: value, endDate: date.startDate });
+            } else {
+              onClickDate?.({ startDate: date.startDate, endDate: value });
+            }
+            changeState("start");
+          }
+        }}
+      >
+        {children}
+      </DayContainer>
+    );
+  }
+);

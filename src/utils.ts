@@ -21,7 +21,7 @@ export const getPrevYearMonthList = (date: Dayjs) =>
 /**
  * debug function
  */
-const debug = (list: Dayjs[], ...message: string[]) => {
+export const debug = (list: Dayjs[], ...message: string[]) => {
   console.log(...message);
   list.map((d) => {
     console.log(d.format("YYYY-MM"));

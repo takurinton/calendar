@@ -60,6 +60,8 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
 
   // TODO: SSR support
   useEffect(() => {
+    // Rendering multiple calendars break with duplicate ids...
+    // TODO: fix this
     const target = document.getElementById(d.format("YYYY-MM"));
     if (target !== null) {
       target.scrollIntoView({ block: "center" });
