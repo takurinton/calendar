@@ -41,26 +41,39 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
   // Answer: impossible
   const handleDateChange = useCallback(
     (value: Dayjs) => {
-      if (clickState === "start") {
-        if (value.isAfter(date.endDate)) {
-          onDateChange?.({
-            startDate: date.endDate,
-            endDate: value,
-          });
-        } else {
-          onDateChange?.({
-            startDate: value,
-            endDate: date.endDate,
-          });
-        }
-        setClickState("end");
-      } else if (clickState === "end") {
-        if (value.isBefore(date.startDate)) {
-          onDateChange?.({ startDate: value, endDate: date.startDate });
-        } else {
-          onDateChange?.({ startDate: date.startDate, endDate: value });
-        }
-        setClickState("start");
+      switch (clickState) {
+        case "start":
+          if (value.isAfter(date.endDate)) {
+            onDateChange?.({
+              startDate: date.endDate,
+              endDate: value,
+            });
+          } else {
+            onDateChange?.({
+              startDate: value,
+              endDate: date.endDate,
+            });
+          }
+          setClickState("end");
+          break;
+        case "end":
+          if (value.isBefore(date.startDate)) {
+            onDateChange?.({
+              startDate: value,
+              endDate: date.startDate,
+            });
+          } else {
+            onDateChange?.({
+              startDate: date.startDate,
+              endDate: value,
+            });
+          }
+          setClickState("start");
+          break;
+        // Maybe, I will add other state.
+        default:
+          console.warn("Unexpected clickState");
+          break;
       }
     },
     [date]
