@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { createTheme, ThemeProvider } from "ingred-ui";
 import { useState } from "react";
-import { Calender } from "./Calender";
+import { DatePicker } from "./DatePicker";
 
 function App() {
   const theme = createTheme();
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Calender date={date} onDateChange={handleChangeDate} />
+      <DatePicker date={date} onDateChange={handleChangeDate} />
     </ThemeProvider>
   );
 }

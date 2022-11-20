@@ -17,3 +17,14 @@ export const getPrevYearMonthList = (date: Dayjs) =>
   Array.from(new Array(12)).map((_, i) =>
     date.clone().subtract(12 - i, "month")
   );
+
+/**
+ * debug function
+ */
+const debug = (list: Dayjs[], ...message: string[]) => {
+  console.log(...message);
+  list.map((d) => {
+    console.log(d.format("YYYY-MM"));
+  });
+  console.log("");
+};

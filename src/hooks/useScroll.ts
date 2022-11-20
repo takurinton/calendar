@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs";
 import { useCallback, useEffect, useState } from "react";
-import { MARGIN } from "./constants";
-import { getNextYearMonthList, getPrevYearMonthList } from "./utils";
+import { MARGIN } from "../constants";
+import { getNextYearMonthList, getPrevYearMonthList } from "../utils";
 
 export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
   const [loaded, setLoaded] = useState<{

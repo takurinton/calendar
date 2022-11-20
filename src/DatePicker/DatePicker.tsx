@@ -1,67 +1,81 @@
-import { FC, useMemo } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { weekList } from "./constants";
-import { Container, DatePickerContainer, DayStyle } from "./styled";
-import { Day } from "./internal";
-import { Typography } from "ingred-ui";
+import { ScrollArea, Typography } from "ingred-ui";
+import { FC, useMemo, useRef } from "react";
+import { HEIGHT, weekList } from "../constants";
+import {
+  Container,
+  CalendarContainer,
+  DatePickerContainer,
+  DayStyle,
+} from "../styled";
+import { useScroll } from "../hooks/useScroll";
+import { Day } from "./internal/Day";
 
 type Props = {
-  id: string;
-  date?: Dayjs;
-  vdate: Dayjs;
+  date: Dayjs;
   onDateChange?: (date: Dayjs) => void;
 };
 
 /**
- * DatePicker UI
- * Component for displaying a stand-alone calendar.
- * Calculates the first day of the month and displays the calendar in grid.
- * Sunday is the start.
+ * DatePicker
+ * Scrollable calendar UI.
+ * Currently, one year from the currently selected date is displayed.
+ * @todo forwardRef
  */
-export const DatePicker: FC<Props> = ({
-  id,
-  date = dayjs(),
-  vdate,
-  onDateChange,
-}) => {
-  const dayOfWeek = useMemo(() => date.startOf("month").day(), [date]);
+export const DatePicker: FC<Props> = ({ date, onDateChange }) => {
+  const vdate = useMemo(() => date.clone(), [date]);
+  const dayOfWeek = useMemo(() => vdate.startOf("month").day(), [vdate]);
   const daysList = useMemo(
-    () => Array.from(new Array(date.daysInMonth()), (_, i) => i + 1),
-    [date]
+    () => Array.from(new Array(vdate.daysInMonth()), (_, i) => i + 1),
+    [vdate]
   );
 
-  return (
-    <Container id={id}>
-      <Typography align="center" component="h1" weight="bold">
-        {date.format("YYYY年MM月")}
-      </Typography>
-      <DatePickerContainer>
-        {weekList["ja"].map((week) => (
-          <DayStyle key={week}>{week}</DayStyle>
-        ))}
+  const ref = useRef<HTMLDivElement>(null);
+  const { monthList } = useScroll(vdate, ref);
 
-        {Array.from(new Array(dayOfWeek), (_, i) => (
-          <DayStyle key={i} />
-        ))}
-        {daysList.map((day) => (
-          <DayStyle key={day}>
-            <Day
-              key={day}
-              value={dayjs(new Date(date.year(), date.month(), day))}
-              selected={
-                // string compare
-                vdate.format("YYYY-MM-DD") ===
-                dayjs(new Date(date.year(), date.month(), day)).format(
-                  "YYYY-MM-DD"
-                )
-              }
-              onClickDate={onDateChange}
+  return (
+    <Container>
+      <ScrollArea ref={ref} minHeight={HEIGHT} maxHeight={HEIGHT} id="calendar">
+        <>
+          {monthList.map((m) => (
+            <DatePickerContainer
+              key={m.format("YYYY-MM")}
+              id={m.format("YYYY-MM")}
             >
-              {day}
-            </Day>
-          </DayStyle>
-        ))}
-      </DatePickerContainer>
+              <Typography align="center" component="h1" weight="bold">
+                {m.format("YYYY年MM月")}
+              </Typography>
+              <CalendarContainer>
+                {weekList["ja"].map((week) => (
+                  <DayStyle key={week}>{week}</DayStyle>
+                ))}
+
+                {Array.from(new Array(dayOfWeek), (_, i) => (
+                  <DayStyle key={i} />
+                ))}
+                {daysList.map((day) => (
+                  <DayStyle key={day}>
+                    <Day
+                      key={day}
+                      value={dayjs(new Date(m.year(), m.month(), day))}
+                      selected={
+                        // string compare
+                        vdate.format("YYYY-MM-DD") ===
+                        dayjs(new Date(m.year(), m.month(), day)).format(
+                          "YYYY-MM-DD"
+                        )
+                      }
+                      onClickDate={onDateChange}
+                    >
+                      {day}
+                    </Day>
+                  </DayStyle>
+                ))}
+              </CalendarContainer>
+            </DatePickerContainer>
+          ))}
+        </>
+      </ScrollArea>
     </Container>
   );
 };
