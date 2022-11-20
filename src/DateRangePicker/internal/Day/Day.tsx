@@ -9,6 +9,7 @@ type DateRange = {
 
 type Props = {
   selected: boolean;
+  isBetween: boolean;
   value: Dayjs;
   date: DateRange;
   clickState: "start" | "end" | "none";
@@ -20,6 +21,7 @@ type Props = {
 export const Day: FC<Props> = memo(
   ({
     selected,
+    isBetween,
     date,
     value,
     clickState,
@@ -30,6 +32,7 @@ export const Day: FC<Props> = memo(
     return (
       <DayContainer
         selected={selected}
+        isBetween={isBetween}
         // How can I improve the User Experience?
         // Answer: impossible
         onClick={() => {

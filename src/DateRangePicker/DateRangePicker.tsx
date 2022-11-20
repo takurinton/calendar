@@ -1,4 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
+// import "dayjs/plugin/isBetween";
 import { ScrollArea, Typography } from "ingred-ui";
 import { FC, useMemo, useRef, useState } from "react";
 import { HEIGHT, weekList } from "../constants";
@@ -32,6 +33,40 @@ const isSelected = (
     dayjs(new Date(month.year(), month.month(), day)).format("YYYY-MM-DD") ||
   endDate?.format("YYYY-MM-DD") ===
     dayjs(new Date(month.year(), month.month(), day)).format("YYYY-MM-DD");
+
+// isBetween is not working using vite development server. I don't know why.
+// Instead, I define function myself to check if the date is between start and end date.
+// const isBetween = (
+//   { startDate, endDate }: DateRange,
+//   month: Dayjs,
+//   day: number
+// ) =>
+//   (startDate &&
+//     endDate &&
+//     dayjs(new Date(month.year(), month.month(), day)).isBetween(
+//       startDate.format("YYYY-MM-DD"),
+//       endDate.format("YYYY-MM-DD"),
+//       "day",
+//       "[]"
+//     )) ??
+//   false;
+
+const isBetween = (
+  { startDate, endDate }: DateRange,
+  month: Dayjs,
+  day: number
+) =>
+  (startDate &&
+    endDate &&
+    dayjs(new Date(month.year(), month.month(), day)).isAfter(
+      startDate.format("YYYY-MM-DD"),
+      "day"
+    ) &&
+    dayjs(new Date(month.year(), month.month(), day)).isBefore(
+      endDate.format("YYYY-MM-DD"),
+      "day"
+    )) ??
+  false;
 
 /**
  * DateRangePicker
@@ -88,6 +123,7 @@ export const DateRangePicker: FC<Props> = ({ date, onDateChange }) => {
                       value={dayjs(new Date(m.year(), m.month(), day))}
                       date={date}
                       selected={isSelected(date, m, day)}
+                      isBetween={isBetween(date, m, day)}
                       clickState={clickState}
                       changeState={setClickState}
                       onClickDate={onDateChange}
