@@ -49,7 +49,12 @@ export const DatePicker: FC<Props> = ({ date, onDateChange }) => {
                 ))}
                 {Array.from(new Array(m.daysInMonth()), (_, i) => i + 1).map(
                   (day) => (
-                    <DayStyle key={day}>
+                    <DayStyle
+                      key={day}
+                      id={dayjs(new Date(m.year(), m.month(), day)).format(
+                        "YYYY-MM-DD"
+                      )}
+                    >
                       <Day
                         key={day}
                         value={dayjs(new Date(m.year(), m.month(), day))}
