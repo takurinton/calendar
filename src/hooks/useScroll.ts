@@ -1,5 +1,5 @@
 import { Dayjs } from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { MARGIN } from "../constants";
 
 /**
@@ -28,11 +28,6 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
     ...getNextYearMonthList(d),
   ]);
 
-  const options = useMemo(
-    () => ({ root: ref.current, rootMargin: `${MARGIN}px`, threshold: 0.1 }),
-    [ref]
-  );
-
   useEffect(() => {
     const targets = document.getElementsByClassName(d.format("YYYY-MM"));
     for (const target of targets) {
@@ -57,7 +52,11 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
       });
     };
 
-    const observer = new IntersectionObserver(cb, options);
+    const observer = new IntersectionObserver(cb, {
+      root: ref.current,
+      rootMargin: `${MARGIN}px`,
+      threshold: 0.1,
+    });
 
     const target = document.getElementById(
       loaded.next.subtract(1, "month").format("YYYY-MM")
@@ -92,7 +91,11 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
       });
     };
 
-    const observer = new IntersectionObserver(cb, options);
+    const observer = new IntersectionObserver(cb, {
+      root: ref.current,
+      rootMargin: `${MARGIN}px`,
+      threshold: 0.1,
+    });
 
     const target = document.getElementById(
       loaded.prev.add(1, "month").format("YYYY-MM")
