@@ -58,17 +58,16 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
       threshold: 0.1,
     });
 
-    const target = document.getElementById(
+    const targets = document.getElementsByClassName(
       loaded.next.subtract(1, "month").format("YYYY-MM")
     );
-    if (target === null) {
-      return;
+
+    for (const target of targets) {
+      observer.observe(target);
     }
 
-    observer.observe(target);
-
     return () => {
-      if (target !== null) {
+      for (const target of targets) {
         observer.unobserve(target);
       }
     };
@@ -97,17 +96,16 @@ export const useScroll = (d: Dayjs, ref: React.RefObject<HTMLDivElement>) => {
       threshold: 0.1,
     });
 
-    const target = document.getElementById(
+    const targets = document.getElementsByClassName(
       loaded.prev.add(1, "month").format("YYYY-MM")
     );
-    if (target === null) {
-      return;
+
+    for (const target of targets) {
+      observer.observe(target);
     }
 
-    observer.observe(target);
-
     return () => {
-      if (target !== null) {
+      for (const target of targets) {
         observer.unobserve(target);
       }
     };
